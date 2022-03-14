@@ -13,11 +13,16 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 @Path("/api/books")
 @Tag(name = "Book REST endpoint") //Check swagger-ui
 public class BookResource {
+
+    //@Inject Opcional
+    @RestClient//Annotation to the proxy
+    NumberProxy proxy;
 
     @Inject
     Logger logger;
@@ -37,7 +42,8 @@ public class BookResource {
         ) {
         Book book = new Book();//New Book instance
 
-        book.setIsbn13("13-We will get it later from the Number microservice");
+        //book.setIsbn13("13-We will get it later from the Number microservice");
+        book.setIsbn13(proxy.generateIsbnNumbers().getIsbn13()); //Getting from the rest-number microservice
         book.setTitle(title);
         book.setAuthor(author);
         book.setYearOfPublication(yearOfPublication);
